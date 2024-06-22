@@ -59,14 +59,14 @@
         let data = null;
 
         const init = () => {
-            $('#description').innerHTML += `<div>Column preference order: ${KEY_PREFERENCE.join(', ')}</div>`;
+            $('#description').innerHTML += `<div>Preferred order of column headres in file: ${KEY_PREFERENCE.join(', ')}</div>`;
         }
 
         const handleDrop = event => {
             event.preventDefault();
             if (!event.dataTransfer || !event.dataTransfer.files) return;
             const [file1, file2] = event.dataTransfer.files;
-            if (!file1 || !file2) return alert('Expected 2 files to be dropped at once');
+            if (!file1 || !file2) return alert('Expected 2 files, only received 1 file.);
 
             Promise.all([
                 parseCSVFile(file1),
@@ -80,7 +80,7 @@
                     key = str;
                 };
                 KEY_PREFERENCE.forEach(check);
-                if (!key) return alert('Invalid header, make sure you have at least a column named: _id, slug or name');
+                if (!key) return alert('Invalid column headers in files. Please make sure you have at least one column named with: "_id", "slug", or "name"');
 
                 render(key, [
                     csvDiff({key}, csv1, csv2),
@@ -93,7 +93,7 @@
             const reader = new FileReader();
             reader.onload = ({target: {result}}) => {
                 const csv = parseCSV(result);
-                if (!csv || !csv.length || csv.length < 2) return reject('The given CSV is empty: ' + file.name);
+                if (!csv || !csv.length || csv.length < 2) return reject('No data found in CSV file: ' + file.name);
                 const header = Object.keys(csv[0]);
                 resolve({
                     data: csv,
