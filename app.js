@@ -59,7 +59,11 @@ document.addEventListener("DOMContentLoaded", () => {
             };
 
             fileReader.onerror = reject;
-            fileReader.readAsText(file);
+            if (fileExtension === "xlsx") {
+                fileReader.readAsArrayBuffer(file); // Read the file as binary (ArrayBuffer) for XLSX
+            } else {
+                fileReader.readAsText(file); // Read CSV as text
+            }
         });
     }
 
@@ -71,7 +75,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Function to parse XLSX file content (using the XLSX.js library)
     async function parseXLSX(content) {
-        const workbook = XLSX.read(content, { type: "binary" });
+        const workbook = XLSX.read(content, { type: "array" }); // Read the binary content as an array
         const sheet = workbook.Sheets[workbook.SheetNames[0]];
         const data = XLSX.utils.sheet_to_json(sheet, { header: 1 });
         return data;
