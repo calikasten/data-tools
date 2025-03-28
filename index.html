@@ -1,48 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Data Tools Web App</title>
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="style.css">
     <!-- Link to XLSX.js library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.1/xlsx.full.min.js"></script>
-  </head>
-  <body>
+</head>
+<body>
     <div class="container">
-      <h1>Data Tools Web App</h1>
+        <h1>Data Tools Web App</h1>
+        
+        <!-- Tool 1: Compare Two Files -->
+        <div class="tool">
+            <h2>Tool 1: Compare Two Files</h2>
+            <form id="tool1-form">
+                <label for="file1">Upload CSV/XLSX File 1</label>
+                <input type="file" id="file1" accept=".csv, .xlsx">
+                <label for="file2">Upload CSV/XLSX File 2</label>
+                <input type="file" id="file2" accept=".csv, .xlsx">
+                <button type="submit">Compare Files</button>
+            </form>
+            <div id="file-differences"></div>
+        </div>
 
-      <!-- Tool 1: Compare Two Files -->
-      <div class="tool">
-        <h2>Tool 1: Compare Two Files</h2>
-        <form id="tool1-form">
-          <div class="input-section">
-            <label for="file1">Upload CSV/XLSX File 1</label>
-            <input type="file" id="file1" accept=".csv, .xlsx" />
-          </div>
-          <div class="input-section">
-            <label for="file2">Upload CSV/XLSX File 2</label>
-            <input type="file" id="file2" accept=".csv, .xlsx" />
-          </div>
-          <button type="submit">Compare Files</button>
-        </form>
-        <div id="file-differences"></div>
-      </div>
+        <!-- Tool 2: Find Duplicates -->
+        <div class="tool">
+            <h2>Tool 2: Find Duplicates</h2>
+            <form id="tool2-form">
+                <label for="file3">Upload CSV/XLSX File</label>
+                <input type="file" id="file3" accept=".csv, .xlsx">
+                <button type="submit">Find Duplicates</button>
+            </form>
+            <div id="duplicates-result"></div>
+        </div>
 
-      <!-- Tool 2: Find Duplicates in One File -->
-      <div class="tool">
-        <h2>Tool 2: Find Duplicates</h2>
-        <form id="tool2-form">
-          <div class="input-section">
-            <label for="file3">Upload CSV/XLSX File</label>
-            <input type="file" id="file3" accept=".csv, .xlsx" />
-          </div>
-          <button type="submit">Find Duplicates</button>
-        </form>
-        <div id="duplicates-result"></div>
-      </div>
+        <!-- Tool 3: Convert JSON to CSV -->
+        <div class="tool">
+            <h2>Tool 3: Convert JSON to CSV</h2>
+            <form id="tool3-form">
+                <label for="jsonFile">Upload JSON File</label>
+                <input type="file" id="jsonFile" accept=".json">
+                <button type="submit">Convert to CSV</button>
+            </form>
+            <div id="json-to-csv-result"></div>
+        </div>
     </div>
 
     <script src="app.js"></script>
-  </body>
+</body>
 </html>
