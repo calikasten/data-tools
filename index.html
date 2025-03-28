@@ -1,17 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Data Tools</title>
-    <link rel="stylesheet" href="css/style.css" />
-  </head>
-  <body>
-    <h2>Highlight Differences</h2>
-    <div id="comparison-table"></div>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Data Tools</h1>
 
-    <script src="js/app.js"></script>
+        <!-- Tool 1: Compare Two Files -->
+        <div class="tool" id="tool1">
+            <h2>Compare Two Files</h2>
+            <div class="file-inputs">
+                <input type="file" id="file1" accept=".csv, .xlsx" />
+                <input type="file" id="file2" accept=".csv, .xlsx" />
+            </div>
+            <button id="compare-btn">Compare Files</button>
+            <div id="comparison-result"></div>
+        </div>
 
-    <h2>Highlight Duplicates</h2>
-  </body>
+        <!-- Tool 2: Find Duplicates in One File -->
+        <div class="tool" id="tool2">
+            <h2>Find Duplicates in One File</h2>
+            <input type="file" id="file" accept=".csv, .xlsx" />
+            <button id="find-duplicates-btn">Find Duplicates</button>
+            <div id="duplicates-result"></div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
 </html>
