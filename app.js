@@ -1,152 +1,127 @@
-// Function to split text into sentences
-function splitIntoSentences(text) {
-  return text.match(/[^.!?]+[.!?]*/g) || [];
-}
+document.addEventListener("DOMContentLoaded", () => {
+    // Tool 1: Compare Two Files
+    const tool1Form = document.getElementById("tool1-form");
+    const fileDifferencesDiv = document.getElementById("file-differences");
 
-// Function to split text into tokens while preserving spaces
-function tokenize(text) {
-  return text.match(/(\s+|\w+|[^\w\s])/g) || [];
-}
+    // Tool 2: Find Duplicates
+    const tool2Form = document.getElementById("tool2-form");
+    const duplicatesResultDiv = document.getElementById("duplicates-result");
 
-// Function to find the optimal alignment between two arrays
-function findAlignment(arr1, arr2) {
-  const m = arr1.length;
-  const n = arr2.length;
-  const dp = Array.from({ length: m + 1 }, () => Array(n + 1).fill(0));
+    tool1Form.addEventListener("submit", async (e) => {
+        e.preventDefault();
 
-  // Fill dp array with longest common subsequence lengths
-  for (let i = 1; i <= m; i++) {
-    for (let j = 1; j <= n; j++) {
-      if (arr1[i - 1] === arr2[j - 1]) {
-        dp[i][j] = dp[i - 1][j - 1] + 1;
-      } else {
-        dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
-      }
-    }
-  }
+        const file1 = document.getElementById("file1").files[0];
+        const file2 = document.getElementById("file2").files[0];
 
-  // Backtrack to find the alignment
-  let i = m, j = n;
-  const alignment = [];
-  while (i > 0 && j > 0) {
-    if (arr1[i - 1] === arr2[j - 1]) {
-      alignment.push({ old: arr1[i - 1], new: arr2[j - 1], match: true });
-      i--;
-      j--;
-    } else if (dp[i - 1][j] >= dp[i][j - 1]) {
-      alignment.push({ old: arr1[i - 1], new: '', match: false });
-      i--;
-    } else {
-      alignment.push({ old: '', new: arr2[j - 1], match: false });
-      j--;
-    }
-  }
+        if (file1 && file2) {
+            const file1Data = await parseFile(file1);
+            const file2Data = await parseFile(file2);
 
-  // Add remaining elements
-  while (i > 0) alignment.push({ old: arr1[i - 1], new: '', match: false }), i--;
-  while (j > 0) alignment.push({ old: '', new: arr2[j - 1], match: false }), j--;
+            const differences = compareFiles(file1Data, file2Data);
 
-  return alignment.reverse();
-}
-
-// Function to highlight differences based on alignment
-function highlightDifferences(oldStr, newStr) {
-  const oldTokens = tokenize(oldStr);
-  const newTokens = tokenize(newStr);
-  const alignment = findAlignment(oldTokens, newTokens);
-
-  let resultOld = '';
-  let resultNew = '';
-
-  alignment.forEach(pair => {
-    if (pair.match) {
-      resultOld += `<span class="syntax-green">${pair.old}</span>`;
-      resultNew += `<span class="syntax-green">${pair.new}</span>`;
-    } else {
-      resultOld += `<span class="syntax-orange">${pair.old}</span>`;
-      resultNew += `<span class="syntax-orange">${pair.new}</span>`;
-    }
-  });
-
-  return { old: resultOld, new: resultNew };
-}
-
-// Function to calculate the similarity between two strings
-function calculateSimilarity(str1, str2) {
-  const tokens1 = tokenize(str1);
-  const tokens2 = tokenize(str2);
-  const alignment = findAlignment(tokens1, tokens2);
-
-  const matchCount = alignment.filter(pair => pair.match).length;
-  const maxLength = Math.max(tokens1.length, tokens2.length);
-
-  return matchCount / maxLength;
-}
-
-// Function to dynamically align sentences with a >50% similarity threshold
-function dynamicSentenceAlignment(oldSentences, newSentences) {
-  const usedNewSentences = new Set();
-  const alignmentResults = [];
-
-  oldSentences.forEach(oldSentence => {
-    let bestMatch = '';
-    let bestMatchIndex = -1;
-    let bestSimilarity = 0;
-
-    newSentences.forEach((newSentence, index) => {
-      if (usedNewSentences.has(index)) return;
-
-      const similarity = calculateSimilarity(oldSentence, newSentence);
-      if (similarity > bestSimilarity) {
-        bestSimilarity = similarity;
-        bestMatch = newSentence;
-        bestMatchIndex = index;
-      }
+            displayFileDifferences(differences);
+        } else {
+            alert("Please upload both files.");
+        }
     });
 
-    if (bestSimilarity > 0.5) {
-      const diffResult = highlightDifferences(oldSentence, bestMatch);
-      alignmentResults.push({ old: diffResult.old, new: diffResult.new });
-      usedNewSentences.add(bestMatchIndex);
-    } else {
-      alignmentResults.push({ old: `<span class="syntax-orange">${oldSentence}</span>`, new: `<span class="syntax-orange"></span>` });
+    tool2Form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const file3 = document.getElementById("file3").files[0];
+
+        if (file3) {
+            const fileData = await parseFile(file3);
+            const duplicates = findDuplicates(fileData);
+
+            displayDuplicates(duplicates);
+        } else {
+            alert("Please upload a file.");
+        }
+    });
+
+    // Function to parse a CSV or XLSX file
+    async function parseFile(file) {
+        const fileExtension = file.name.split(".").pop().toLowerCase();
+        const fileReader = new FileReader();
+
+        return new Promise((resolve, reject) => {
+            fileReader.onload = async (event) => {
+                const fileContent = event.target.result;
+
+                if (fileExtension === "csv") {
+                    resolve(parseCSV(fileContent));
+                } else if (fileExtension === "xlsx") {
+                    resolve(await parseXLSX(fileContent));
+                } else {
+                    reject("Unsupported file format");
+                }
+            };
+
+            fileReader.onerror = reject;
+            fileReader.readAsText(file);
+        });
     }
-  });
 
-  newSentences.forEach((newSentence, index) => {
-    if (!usedNewSentences.has(index)) {
-      alignmentResults.push({ old: `<span class="syntax-orange"></span>`, new: `<span class="syntax-orange">${newSentence}</span>` });
+    // Function to parse CSV file content into an array of rows
+    function parseCSV(content) {
+        const rows = content.split("\n").map(row => row.split(","));
+        return rows;
     }
-  });
 
-  return alignmentResults;
-}
+    // Function to parse XLSX file content (using the XLSX.js library)
+    async function parseXLSX(content) {
+        const workbook = XLSX.read(content, { type: "binary" });
+        const sheet = workbook.Sheets[workbook.SheetNames[0]];
+        const data = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+        return data;
+    }
 
-// Example Input
-const input = `Hello World. This is the old text.###Hello Earth. This is the new text.`;
-const [oldText, newText] = input.split('###');
+    // Function to compare two files and return the differences
+    function compareFiles(file1Data, file2Data) {
+        const differences = [];
+        const maxRows = Math.max(file1Data.length, file2Data.length);
 
-// Split old and new texts into sentences
-const oldSentences = splitIntoSentences(oldText.trim());
-const newSentences = splitIntoSentences(newText.trim());
+        for (let i = 0; i < maxRows; i++) {
+            const row1 = file1Data[i] || [];
+            const row2 = file2Data[i] || [];
 
-// Align sentences dynamically
-const alignmentResults = dynamicSentenceAlignment(oldSentences, newSentences);
+            for (let j = 0; j < Math.max(row1.length, row2.length); j++) {
+                if (row1[j] !== row2[j]) {
+                    differences.push(`Difference at Row ${i + 1}, Column ${j + 1}: ${row1[j] || "N/A"} !== ${row2[j] || "N/A"}`);
+                }
+            }
+        }
 
-// HTML content to display the old and new texts with differences highlighted
-const htmlContent = `
-  <table>
-    <tr>
-      <th>Text A</th>
-      <th>Text B</th>
-    </tr>
-    ${alignmentResults.map(result => `
-    <tr>
-      <td>${result.old.trim()}</td>
-      <td>${result.new.trim()}</td>
-    </tr>`).join('')}
-  </table>
-`;
+        return differences;
+    }
 
-// Insert the comparison table into the div with id "comparison-table"
-document.getElementById("comparison-table").innerHTML = htmlContent;
+    // Function to display differences
+    function displayFileDifferences(differences) {
+        fileDifferencesDiv.style.display = "block";
+        fileDifferencesDiv.innerHTML = `<h3>Differences</h3><ul>${differences.map(diff => `<li>${diff}</li>`).join("")}</ul>`;
+    }
+
+    // Function to find duplicates in a file
+    function findDuplicates(fileData) {
+        const seen = new Set();
+        const duplicates = [];
+
+        fileData.forEach((row, index) => {
+            const rowString = JSON.stringify(row);
+            if (seen.has(rowString)) {
+                duplicates.push(`Duplicate at Row ${index + 1}: ${row.join(", ")}`);
+            } else {
+                seen.add(rowString);
+            }
+        });
+
+        return duplicates;
+    }
+
+    // Function to display duplicates
+    function displayDuplicates(duplicates) {
+        duplicatesResultDiv.style.display = "block";
+        duplicatesResultDiv.innerHTML = `<h3>Duplicates</h3><ul>${duplicates.map(dup => `<li>${dup}</li>`).join("")}</ul>`;
+    }
+});
