@@ -3,48 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data Tools Web App</title>
+    <title>Helpful Data Tools</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Link to XLSX.js library -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.1/xlsx.full.min.js"></script>
 </head>
 <body>
     <div class="container">
-        <h1>Data Tools Web App</h1>
-        
-        <!-- Tool 1: Compare Two Files -->
-        <div class="tool">
-            <h2>Tool 1: Compare Two Files</h2>
-            <form id="tool1-form">
-                <label for="file1">Upload CSV/XLSX File 1</label>
-                <input type="file" id="file1" accept=".csv, .xlsx">
-                <label for="file2">Upload CSV/XLSX File 2</label>
-                <input type="file" id="file2" accept=".csv, .xlsx">
-                <button type="submit">Compare Files</button>
-            </form>
-            <div id="file-differences"></div>
+        <h1 class="tagline">Helpful Data Tools</h1>
+
+        <!-- Tool 1: Compare Files (.txt or .docx) -->
+        <div class="card">
+            <h2>Compare Files (.txt or .docx)</h2>
+            <div class="file-upload" id="fileUploadTxt">
+                <p>Upload 2 files to compare</p>
+                <input type="file" id="file1Txt" accept=".txt, .docx">
+                <input type="file" id="file2Txt" accept=".txt, .docx">
+                <div class="dropzone" id="dropzoneTxt">
+                    <p>Drag and drop files here</p>
+                </div>
+            </div>
         </div>
 
-        <!-- Tool 2: Find Duplicates -->
-        <div class="tool">
-            <h2>Tool 2: Find Duplicates</h2>
-            <form id="tool2-form">
-                <label for="file3">Upload CSV/XLSX File</label>
-                <input type="file" id="file3" accept=".csv, .xlsx">
-                <button type="submit">Find Duplicates</button>
-            </form>
-            <div id="duplicates-result"></div>
+        <!-- Tool 2: Compare Files (.csv or .xlsx) -->
+        <div class="card">
+            <h2>Compare Files (.csv or .xlsx)</h2>
+            <div class="file-upload" id="fileUploadCsv">
+                <p>Upload 2 files to compare</p>
+                <input type="file" id="file1Csv" accept=".csv, .xlsx">
+                <input type="file" id="file2Csv" accept=".csv, .xlsx">
+                <div class="dropzone" id="dropzoneCsv">
+                    <p>Drag and drop files here</p>
+                </div>
+            </div>
         </div>
 
-        <!-- Tool 3: Convert JSON to CSV -->
-        <div class="tool">
-            <h2>Tool 3: Convert JSON to CSV</h2>
-            <form id="tool3-form">
-                <label for="jsonFile">Upload JSON File</label>
-                <input type="file" id="jsonFile" accept=".json">
-                <button type="submit">Convert to CSV</button>
-            </form>
-            <div id="json-to-csv-result"></div>
+        <!-- Tool 3: Find Duplicates -->
+        <div class="card">
+            <h2>Find Duplicates</h2>
+            <div class="file-upload" id="fileUploadDup">
+                <p>Upload a file to find duplicates</p>
+                <input type="file" id="fileDup" accept=".csv, .xlsx">
+                <div class="dropzone" id="dropzoneDup">
+                    <p>Drag and drop file here</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tool 4: Convert JSON to CSV -->
+        <div class="card">
+            <h2>Convert JSON to CSV</h2>
+            <div class="file-upload" id="fileUploadJson">
+                <p>Upload a JSON file</p>
+                <input type="file" id="fileJson" accept=".json">
+                <div class="dropzone" id="dropzoneJson">
+                    <p>Drag and drop file here</p>
+                </div>
+            </div>
         </div>
     </div>
 
