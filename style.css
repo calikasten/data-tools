@@ -2,13 +2,13 @@
 body {
     background-color: #121212;
     color: #E0E0E0;
-    font-family: 'Arial', sans-serif;
+    font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
 }
 
 .container {
-    max-width: 1000px;
+    max-width: 800px;
     margin: 50px auto;
     padding: 20px;
     background-color: #1E1E1E;
@@ -16,9 +16,14 @@ body {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
 }
 
-h1, h2 {
+h1 {
     text-align: center;
+    color: #56CCF2; /* Dark mode-compatible blue */
+}
+
+h2 {
     color: #BB86FC;
+    margin-bottom: 10px;
 }
 
 .tool {
@@ -28,8 +33,10 @@ h1, h2 {
     border-radius: 8px;
 }
 
-.input-section {
-    margin-bottom: 20px;
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: normal;
 }
 
 input[type="file"] {
@@ -44,7 +51,7 @@ input[type="file"] {
 }
 
 button {
-    background-color: #BB86FC;
+    background-color: #56CCF2;
     border: none;
     color: white;
     padding: 10px 20px;
@@ -52,10 +59,21 @@ button {
     border-radius: 4px;
     cursor: pointer;
     width: 100%;
+    margin-top: 10px;
 }
 
 button:hover {
-    background-color: #9B66E1;
+    background-color: #4fa3e3;
 }
 
-#file
+#file-differences, #duplicates-result, #json-to-csv-result {
+    margin-top: 20px;
+    background-color: #2C2C2C;
+    padding: 20px;
+    border-radius: 8px;
+    display: none;
+}
+
+ul li {
+    margin: 8px 0;
+}
