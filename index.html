@@ -3,52 +3,48 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Helpful Data Tools</title>
+    <title>Data Tools</title>
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <div class="container">
-      <div class="header">
-        <p>Data Tools</p>
-      </div>
       <section class="tool-card" id="file-compare-txt">
-        <h2>1. Compare Files (.txt OR .docx)</h2>
-        <p>Select two text or word files to compare:</p>
+        <h2>Compare Files (.txt OR .docx)</h2>
+        <p>Select two text or Word files to compare.</p>
         <input type="file" id="file1" accept=".txt,.docx" />
         <input type="file" id="file2" accept=".txt,.docx" />
         <div class="drop-zone" id="drop-zone-txt">
-          <p>Or drag and drop files here</p>
+          <p>Drag and drop files here.</p>
         </div>
         <button id="compare-btn-txt">Compare</button>
       </section>
 
       <section class="tool-card" id="file-compare-csv">
-        <h2>1. Compare Files (.csv OR .xlsx)</h2>
-        <p>Select two CSV or Excel files to compare:</p>
+        <h2>Compare Files (.csv OR .xlsx)</h2>
+        <p>Select two CSV or Excel files to compare.</p>
         <input type="file" id="csv-file1" accept=".csv,.xlsx" />
         <input type="file" id="csv-file2" accept=".csv,.xlsx" />
         <div class="drop-zone" id="drop-zone-csv">
-          <p>Or drag and drop files here</p>
+          <p>Drag and drop files here.</p>
         </div>
         <button id="compare-btn-csv">Compare</button>
       </section>
 
       <section class="tool-card" id="duplicates">
-        <h2>2. Find Duplicates</h2>
-        <p>Select a CSV or Excel file to find duplicates:</p>
+        <h2>Find Duplicates</h2>
+        <p>Select a CSV or Excel file to find duplicates within the file.</p>
         <input type="file" id="duplicates-file" accept=".csv,.xlsx" />
         <div class="drop-zone" id="drop-zone-duplicates">
-          <p>Or drag and drop file here</p>
+          <p>Drag and drop file here.</p>
         </div>
         <button id="duplicates-btn">Find Duplicates</button>
       </section>
 
       <section class="tool-card" id="json-to-csv">
-        <h2>3. Convert JSON to CSV</h2>
-        <p>Select a JSON file to convert to CSV:</p>
+        <h2>Convert JSON to CSV</h2>
+        <p>Select a JSON file to convert to CSV.</p>
         <input type="file" id="json-file" accept=".json" />
         <div class="drop-zone" id="drop-zone-json">
-          <p>Or drag and drop file here</p>
+          <p>Drag and drop file here.</p>
         </div>
         <button id="convert-btn">Convert</button>
       </section>
