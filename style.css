@@ -7,8 +7,8 @@
 
 body {
   font-family: Arial, sans-serif;
-  background-color: #121212;
-  color: #e0e0e0;
+  background-color: #121212; /* Dark background for dark mode */
+  color: #e0e0e0; /* Light gray text color (similar to ChatGPT) */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -16,10 +16,13 @@ body {
   flex-direction: column;
 }
 
+/* Title Styles */
 h1.tagline {
-  font-size: 2.5rem;
-  color: #90caf9;
-  margin-bottom: 20px;
+  font-size: 3rem;
+  color: #f5f5f5; /* Light gray color for the title */
+  margin-bottom: 40px;
+  text-align: center;
+  font-weight: 600;
 }
 
 /* Container Styles */
@@ -27,29 +30,35 @@ h1.tagline {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 20px;
+  gap: 30px;
 }
 
 /* Card Styles */
 .card {
-  background-color: #333;
+  background-color: #333; /* Dark background for cards */
   border-radius: 10px;
-  padding: 20px;
+  padding: 30px;
   width: 300px;
   text-align: center;
   transition: background-color 0.3s;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
 }
 
+/* Card Heading Styles */
 .card h2 {
-  color: #f48fb1;
-  margin-bottom: 10px;
+  color: #b0bec5; /* Slightly darker gray for headings */
+  font-size: 1.5rem;
+  margin-bottom: 15px;
 }
 
+/* Card Description Styles */
 .card p {
-  color: #bbb;
-  margin-bottom: 20px;
+  color: #e0e0e0; /* Lighter gray for body text */
+  margin-bottom: 25px;
+  font-size: 1rem;
 }
 
+/* File Upload Button Styling */
 .file-upload input {
   display: none;
 }
@@ -59,15 +68,18 @@ h1.tagline {
   padding: 20px;
   border-radius: 8px;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: background-color 0.3s, border-color 0.3s;
+  color: #b0bec5; /* Text inside the file drop area is in a soft gray */
 }
 
 .file-upload:hover {
-  background-color: #444;
+  background-color: #444; /* Darker hover effect */
+  border-color: #b0bec5; /* Subtle change in border color on hover */
 }
 
+/* Accepted File Upload Background */
 .file-upload.accepted {
-  background-color: #4caf50;
+  background-color: #4caf50; /* Green color when files are accepted */
 }
 
 /* Accessibility & Mobile Styles */
