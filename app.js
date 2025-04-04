@@ -1,34 +1,56 @@
-// Helper function to handle file drag-and-drop and hover state
-function handleDragOver(event, toolId) {
-    event.preventDefault();
-    document.getElementById(toolId).classList.add('dragover');
+// Drag and drop functionality
+const dropZones = document.querySelectorAll(".drop-zone");
+
+dropZones.forEach((zone) => {
+  zone.addEventListener("dragover", (e) => {
+    e.preventDefault();
+    zone.style.backgroundColor = "#333";
+  });
+
+  zone.addEventListener("dragleave", () => {
+    zone.style.backgroundColor = "#444";
+  });
+
+  zone.addEventListener("drop", (e) => {
+    e.preventDefault();
+    const files = e.dataTransfer.files;
+    handleFileUpload(files, zone);
+  });
+});
+
+// Handling file input
+document.querySelectorAll('input[type="file"]').forEach((input) => {
+  input.addEventListener("change", (e) => {
+    handleFileUpload(
+      e.target.files,
+      e.target.closest(".tool-card").querySelector(".drop-zone")
+    );
+  });
+});
+
+function handleFileUpload(files, zone) {
+  zone.style.backgroundColor = "#66BB6A";
+  // Add logic for handling different file types
+  // e.g. Compare files, Find duplicates, Convert JSON to CSV
+  alert("Files uploaded successfully!");
 }
 
-function handleDrop(event, toolId) {
-    event.preventDefault();
-    document.getElementById(toolId).classList.remove('dragover');
-    let files = event.dataTransfer.files;
-    if (files.length > 0) {
-        handleFileUpload(files, toolId);
-    }
-}
+// Compare files (simplified example)
+document.getElementById("compare-btn-txt").addEventListener("click", () => {
+  alert("Compare .txt or .docx files!");
+});
 
-function handleFileUpload(files, toolId) {
-    // Handle the files uploaded based on the toolId (e.g., file comparison, duplicates, etc.)
-    console.log(`Files uploaded for ${toolId}:`, files);
-    // Example: process the file, handle the comparison, etc.
-}
+// Compare CSV files
+document.getElementById("compare-btn-csv").addEventListener("click", () => {
+  alert("Compare .csv or .xlsx files!");
+});
 
-// Attach event listeners to dropzones
-document.getElementById("dropzoneTxt").addEventListener('dragover', (e) => handleDragOver(e, "dropzoneTxt"));
-document.getElementById("dropzoneTxt").addEventListener('drop', (e) => handleDrop(e, "dropzoneTxt"));
-document.getElementById("dropzoneCsv").addEventListener('dragover', (e) => handleDragOver(e, "dropzoneCsv"));
-document.getElementById("dropzoneCsv").addEventListener('drop', (e) => handleDrop(e, "dropzoneCsv"));
-document.getElementById("dropzoneDup").addEventListener('dragover', (e) => handleDragOver(e, "dropzoneDup"));
-document.getElementById("dropzoneDup").addEventListener('drop', (e) => handleDrop(e, "dropzoneDup"));
-document.getElementById("dropzoneJson").addEventListener('dragover', (e) => handleDragOver(e, "dropzoneJson"));
-document.getElementById("dropzoneJson").addEventListener('drop', (e) => handleDrop(e, "dropzoneJson"));
+// Find duplicates
+document.getElementById("duplicates-btn").addEventListener("click", () => {
+  alert("Find duplicates in .csv or .xlsx files!");
+});
 
-// Handle file input changes (for file selectors)
-document.getElementById("file1Txt").addEventListener('change', (e) => handleFileUpload(e.target.files, 'fileUploadTxt'));
-document.getElementById("file2Txt").addEventListener('change', (e) => handleFileUpload(e.target.files, 'fileUploadTxt'));
+// Convert JSON to CSV
+document.getElementById("convert-btn").addEventListener("click", () => {
+  alert("Convert .json to .csv!");
+});
