@@ -11,10 +11,11 @@ body {
   color: #e0e0e0;
   display: flex;
   justify-content: center;
-  align-items: flex-start;
+  align-items: center;
   height: 100vh;
   flex-direction: column;
   padding-top: 40px;
+  text-align: center;
 }
 
 /* Title Styles */
@@ -35,6 +36,7 @@ h1.tagline {
   gap: 30px;
   width: 100%;
   max-width: 900px;
+  padding: 0 20px;
 }
 
 /* Card Styles */
@@ -95,5 +97,6 @@ h1.tagline {
 
   .card {
     width: 100%;
+    padding: 15px;
   }
 }
