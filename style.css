@@ -11,9 +11,10 @@ body {
   color: #e0e0e0; /* Light gray text color (similar to ChatGPT) */
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start; /* Align items at the top */
   height: 100vh;
   flex-direction: column;
+  padding-top: 40px; /* Add some space from the top */
 }
 
 /* Title Styles */
@@ -28,9 +29,11 @@ h1.tagline {
 /* Container Styles */
 .container {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 30px;
+  flex-direction: column; /* Stack the cards vertically */
+  align-items: center; /* Center the cards horizontally */
+  gap: 30px; /* Add some space between cards */
+  width: 100%;
+  max-width: 900px; /* Limit the width for better readability */
 }
 
 /* Card Styles */
@@ -38,7 +41,8 @@ h1.tagline {
   background-color: #333; /* Dark background for cards */
   border-radius: 10px;
   padding: 30px;
-  width: 300px;
+  width: 100%;
+  max-width: 600px; /* Limit card width */
   text-align: center;
   transition: background-color 0.3s;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
@@ -85,11 +89,10 @@ h1.tagline {
 /* Accessibility & Mobile Styles */
 @media screen and (max-width: 768px) {
   .container {
-    flex-direction: column;
+    width: 90%;
   }
 
   .card {
-    width: 90%;
-    margin-bottom: 20px;
+    width: 100%; /* Take up the full width on small screens */
   }
 }
