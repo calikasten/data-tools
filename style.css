@@ -89,6 +89,12 @@ h1.tagline {
   background-color: #4caf50;
 }
 
+/* Style when files are dragged over the drop zone */
+.file-upload.dragover {
+  background-color: #333;
+  border-color: #4caf50; /* Change border color when dragging over */
+}
+
 /* Accessibility & Mobile Styles */
 @media screen and (max-width: 768px) {
   .container {
