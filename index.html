@@ -20,44 +20,40 @@
     <div class="container">
       <h1 class="tagline">Data Tools</h1>
 
-      <!-- Compare Files Section 1a -->
+      <!-- Compare Text Files -->
       <div class="card" id="compare-files-txt">
         <h2>Compare Files (.txt or .docx)</h2>
         <p>Select and upload two .txt or .docx files to compare.</p>
-        <div class="file-upload" id="txt-upload" ondrop="handleDrop(event)" ondragover="allowDrop(event)" ondragleave="handleDragLeave(event)">
-          <div>Drag and drop .txt or .docx files here</div>
+        <div class="file-upload" id="txt-upload">
           <input type="file" id="txt-file-1" accept=".txt,.docx" />
           <input type="file" id="txt-file-2" accept=".txt,.docx" />
         </div>
       </div>
 
-      <!-- Compare Data Files Tool -->
+      <!-- Compare Data Files -->
       <div class="card" id="compare-files-csv">
         <h2>Compare Files (.csv or .xlsx)</h2>
         <p>Select and upload two .csv or .xlsx files to compare.</p>
-        <div class="file-upload" id="csv-upload" ondrop="handleDrop(event)" ondragover="allowDrop(event)" ondragleave="handleDragLeave(event)">
-          <div>Drag and drop .csv or .xlsx files here</div>
+        <div class="file-upload" id="csv-upload">
           <input type="file" id="csv-file-1" accept=".csv,.xlsx" />
           <input type="file" id="csv-file-2" accept=".csv,.xlsx" />
         </div>
       </div>
 
-      <!-- Find Duplicates Tool -->
+      <!-- Find Duplicates Section -->
       <div class="card" id="find-duplicates">
         <h2>Find Duplicates</h2>
         <p>Select and upload a .csv or .xlsx file to find duplicate rows.</p>
-        <div class="file-upload" id="duplicates-upload" ondrop="handleDrop(event)" ondragover="allowDrop(event)" ondragleave="handleDragLeave(event)">
-          <div>Drag and drop .csv or .xlsx file here</div>
+        <div class="file-upload" id="duplicates-upload">
           <input type="file" id="duplicates-file" accept=".csv,.xlsx" />
         </div>
       </div>
 
-      <!-- Convert JSON to CSV Tool -->
+      <!-- Convert JSON to CSV Section -->
       <div class="card" id="convert-json-csv">
         <h2>Convert JSON to CSV</h2>
         <p>Select and upload a .json file to convert to a .csv file.</p>
-        <div class="file-upload" id="json-upload" ondrop="handleDrop(event)" ondragover="allowDrop(event)" ondragleave="handleDragLeave(event)">
-          <div>Drag and drop .json file here</div>
+        <div class="file-upload" id="json-upload">
           <input type="file" id="json-file" accept=".json" />
         </div>
       </div>
