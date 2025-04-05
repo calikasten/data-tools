@@ -1,242 +1,234 @@
-document.addEventListener("DOMContentLoaded", () => {
-    const fileUploadSections = document.querySelectorAll('.file-upload');
-    
-    // Add event listeners to file upload sections
-    fileUploadSections.forEach((section) => {
-        section.addEventListener("dragover", (e) => {
-            e.preventDefault();
-            section.classList.add('accepted');
-        });
+// Function to compare text or .docx files
+function compareTextFiles() {
+  const file1 = document.getElementById("file1").files[0];
+  const file2 = document.getElementById("file2").files[0];
+  if (!file1 || !file2) {
+    alert("Please upload two files.");
+    return;
+  }
 
-        section.addEventListener("dragleave", () => {
-            section.classList.remove('accepted');
-        });
+  if (
+    file1.type ===
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document" ||
+    file2.type ===
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+  ) {
+    // .docx files - Convert to text
+    const reader1 = new FileReader();
+    reader1.onload = function (e) {
+      const arrayBuffer = e.target.result;
+      mammoth.extractRawText({ arrayBuffer: arrayBuffer }).then((result) => {
+        const text1 = result.value;
+        const reader2 = new FileReader();
+        reader2.onload = function (e) {
+          const arrayBuffer2 = e.target.result;
+          mammoth
+            .extractRawText({ arrayBuffer: arrayBuffer2 })
+            .then((result2) => {
+              const text2 = result2.value;
+              compareTexts(text1, text2);
+            });
+        };
+        reader2.readAsArrayBuffer(file2);
+      });
+    };
+    reader1.readAsArrayBuffer(file1);
+  } else {
+    // .txt files - Direct text comparison
+    const reader1 = new FileReader();
+    reader1.onload = function (e) {
+      const text1 = e.target.result;
+      const reader2 = new FileReader();
+      reader2.onload = function (e) {
+        const text2 = e.target.result;
+        compareTexts(text1, text2);
+      };
+      reader2.readAsText(file2);
+    };
+    reader1.readAsText(file1);
+  }
+}
 
-        section.addEventListener("drop", (e) => {
-            e.preventDefault();
-            section.classList.remove('accepted');
-            handleFileDrop(e, section);
-        });
+// Helper function to compare text and highlight differences
+function compareTexts(text1, text2) {
+  const dmp = new diff_match_patch();
+  const diffs = dmp.diff_main(text1, text2);
+  dmp.diff_cleanupSemantic(diffs);
 
-        const fileInput = section.querySelector('input[type="file"]');
-        fileInput.addEventListener('change', (e) => {
-            handleFileInputChange(e, section);
+  let output = "";
+  diffs.forEach(([op, text]) => {
+    if (op === 1) {
+      // Added
+      output += `<span class="highlight">${text}</span>`;
+    } else if (op === -1) {
+      // Deleted
+      output += `<span class="highlight">${text}</span>`;
+    } else {
+      output += text;
+    }
+  });
+
+  // Create and download the result
+  const blob = new Blob([output], { type: "text/html" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "comparison_result.html";
+  a.click();
+}
+
+// Compare CSV or XLSX files
+function compareCsvFiles() {
+  const file1 = document.getElementById("csvFile1").files[0];
+  const file2 = document.getElementById("csvFile2").files[0];
+  if (!file1 || !file2) {
+    alert("Please upload two files.");
+    return;
+  }
+
+  if (
+    file1.type ===
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" ||
+    file2.type ===
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+  ) {
+    // Parse XLSX files
+    const reader1 = new FileReader();
+    reader1.onload = function (e) {
+      const wb1 = XLSX.read(e.target.result, { type: "array" });
+      const sheet1 = wb1.Sheets[wb1.SheetNames[0]];
+      const json1 = XLSX.utils.sheet_to_json(sheet1);
+      const reader2 = new FileReader();
+      reader2.onload = function (e) {
+        const wb2 = XLSX.read(e.target.result, { type: "array" });
+        const sheet2 = wb2.Sheets[wb2.SheetNames[0]];
+        const json2 = XLSX.utils.sheet_to_json(sheet2);
+        compareSheets(json1, json2);
+      };
+      reader2.readAsArrayBuffer(file2);
+    };
+    reader1.readAsArrayBuffer(file1);
+  } else {
+    // Parse CSV files
+    Papa.parse(file1, {
+      complete: function (results1) {
+        Papa.parse(file2, {
+          complete: function (results2) {
+            compareCsvData(results1.data, results2.data);
+          },
         });
+      },
     });
+  }
+}
 
-    function handleFileDrop(event, section) {
-        const files = event.dataTransfer.files;
-        if (files.length > 0) {
-            section.querySelector('input[type="file"]').files = files;
-        }
+// Helper function to compare CSV data
+function compareCsvData(data1, data2) {
+  let outputData = [];
+  data1.forEach((row, i) => {
+    let newRow = row.map((cell, j) => {
+      if (cell !== data2[i][j]) {
+        return `<span class="highlight">${cell}</span>`;
+      } else {
+        return cell;
+      }
+    });
+    outputData.push(newRow);
+  });
+
+  // Create CSV from outputData and trigger download
+  const csv = Papa.unparse(outputData);
+  const blob = new Blob([csv], { type: "text/csv" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "csv_comparison.csv";
+  a.click();
+}
+
+// Find duplicates in CSV or XLSX
+function findDuplicates() {
+  const file = document.getElementById("duplicateFile").files[0];
+  if (!file) {
+    alert("Please upload a file.");
+    return;
+  }
+
+  if (
+    file.type ===
+    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+  ) {
+    // Parse XLSX file
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      const wb = XLSX.read(e.target.result, { type: "array" });
+      const sheet = wb.Sheets[wb.SheetNames[0]];
+      const json = XLSX.utils.sheet_to_json(sheet);
+      const duplicates = findDuplicateRows(json);
+      highlightRows(duplicates, json);
+    };
+    reader.readAsArrayBuffer(file);
+  } else {
+    // Parse CSV file
+    Papa.parse(file, {
+      complete: function (results) {
+        const duplicates = findDuplicateRows(results.data);
+        highlightRows(duplicates, results.data);
+      },
+    });
+  }
+}
+
+// Find duplicate rows based on the entire row values
+function findDuplicateRows(data) {
+  let seen = {};
+  let duplicates = [];
+  data.forEach((row, index) => {
+    let key = JSON.stringify(row); // Make a key based on the row's data
+    if (seen[key]) {
+      duplicates.push(index);
+    } else {
+      seen[key] = true;
     }
+  });
+  return duplicates;
+}
 
-    function handleFileInputChange(event, section) {
-        const files = event.target.files;
-        if (files.length > 0) {
-            section.classList.add('accepted');
-            const fileId = section.id;
-            switch (fileId) {
-                case "compare-files-txt":
-                    compareTextFiles(files);
-                    break;
-                case "compare-files-csv":
-                    compareCsvFiles(files);
-                    break;
-                case "find-duplicates":
-                    findDuplicates(files);
-                    break;
-                case "convert-json-csv":
-                    convertJsonToCsv(files);
-                    break;
-                default:
-                    break;
-            }
-        }
-    }
+// Highlight duplicate rows in the output
+function highlightRows(duplicates, data) {
+  duplicates.forEach((index) => {
+    data[index] = data[index].map(
+      (cell) => `<span class="highlight">${cell}</span>`
+    );
+  });
 
-    // Compare two .txt or .docx files
-    function compareTextFiles(files) {
-        if (files[0].type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document" || files[1].type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document") {
-            // Handle .docx file comparison
-            compareDocxFiles(files);
-        } else {
-            const file1 = files[0];
-            const file2 = files[1];
-            const reader1 = new FileReader();
-            const reader2 = new FileReader();
+  const csv = Papa.unparse(data);
+  const blob = new Blob([csv], { type: "text/csv" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "duplicates_highlighted.csv";
+  a.click();
+}
 
-            reader1.onload = function (e) {
-                const text1 = e.target.result;
-                reader2.onload = function (e) {
-                    const text2 = e.target.result;
-                    const diff = getTextDifferences(text1, text2);
-                    createFileDownload(diff, "difference.txt");
-                };
-                reader2.readAsText(file2);
-            };
-            reader1.readAsText(file1);
-        }
-    }
+// Convert JSON to CSV
+function convertJsonToCsv() {
+  const file = document.getElementById("jsonFile").files[0];
+  if (!file) {
+    alert("Please upload a JSON file.");
+    return;
+  }
 
-    function compareDocxFiles(files) {
-        const file1 = files[0];
-        const file2 = files[1];
-        const reader1 = new FileReader();
-        const reader2 = new FileReader();
-
-        reader1.onload = function (e) {
-            const arrayBuffer1 = e.target.result;
-            reader2.onload = function (e) {
-                const arrayBuffer2 = e.target.result;
-
-                Promise.all([extractTextFromDocx(arrayBuffer1), extractTextFromDocx(arrayBuffer2)])
-                    .then(([text1, text2]) => {
-                        const diff = getTextDifferences(text1, text2);
-                        createFileDownload(diff, "difference.docx");
-                    });
-            };
-            reader2.readAsArrayBuffer(file2);
-        };
-        reader1.readAsArrayBuffer(file1);
-    }
-
-    function extractTextFromDocx(arrayBuffer) {
-        return new Promise((resolve, reject) => {
-            const zip = new JSZip();
-            zip.loadAsync(arrayBuffer)
-                .then(function (contents) {
-                    const documentXml = contents.files["word/document.xml"];
-                    return documentXml.async("text");
-                })
-                .then(function (text) {
-                    mammoth.extractRawText({ xml: text }).then(function (result) {
-                        resolve(result.value);
-                    }).catch(reject);
-                });
-        });
-    }
-
-    function getTextDifferences(text1, text2) {
-        const lines1 = text1.split("\n");
-        const lines2 = text2.split("\n");
-        let diffText = '';
-        for (let i = 0; i < Math.max(lines1.length, lines2.length); i++) {
-            if (lines1[i] !== lines2[i]) {
-                diffText += `Line ${i + 1}:\nFile 1: ${lines1[i]}\nFile 2: ${lines2[i]}\n\n`;
-            }
-        }
-        return diffText;
-    }
-
-    // Compare two .csv or .xlsx files
-    function compareCsvFiles(files) {
-        const file1 = files[0];
-        const file2 = files[1];
-
-        if (file1.type === "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" || file2.type === "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") {
-            // Parse .xlsx with SheetJS
-            compareXlsxFiles(files);
-        } else {
-            const reader1 = new FileReader();
-            const reader2 = new FileReader();
-
-            reader1.onload = function (e) {
-                const csv1 = e.target.result;
-                reader2.onload = function (e) {
-                    const csv2 = e.target.result;
-                    const diff = getCsvDifferences(csv1, csv2);
-                    createFileDownload(diff, "difference.csv");
-                };
-                reader2.readAsText(file2);
-            };
-            reader1.readAsText(file1);
-        }
-    }
-
-    function compareXlsxFiles(files) {
-        const file1 = files[0];
-        const file2 = files[1];
-        const reader1 = new FileReader();
-        const reader2 = new FileReader();
-
-        reader1.onload = function (e) {
-            const workbook1 = XLSX.read(e.target.result, { type: "binary" });
-            reader2.onload = function (e) {
-                const workbook2 = XLSX.read(e.target.result, { type: "binary" });
-                const diff = getXlsxDifferences(workbook1, workbook2);
-                createFileDownload(diff, "difference.xlsx");
-            };
-            reader2.readAsBinaryString(file2);
-        };
-        reader1.readAsBinaryString(file1);
-    }
-
-    function getXlsxDifferences(workbook1, workbook2) {
-        // Implement comparison logic for XLSX
-        return "Comparison of XLSX files is not yet implemented.";
-    }
-
-    // Find duplicates in .csv or .xlsx file
-    function findDuplicates(files) {
-        const file = files[0];
-        if (file.type === "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") {
-            alert("Find duplicates in .xlsx functionality requires SheetJS.");
-        } else {
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                const csv = e.target.result;
-                const duplicates = getCsvDuplicates(csv);
-                createFileDownload(duplicates, "duplicates.csv");
-            };
-            reader.readAsText(file);
-        }
-    }
-
-    function getCsvDuplicates(csv) {
-        const rows = csv.split("\n");
-        const seen = new Set();
-        let duplicates = '';
-        rows.forEach((row, index) => {
-            if (seen.has(row)) {
-                duplicates += `Duplicate Row ${index + 1}: ${row}\n`;
-            } else {
-                seen.add(row);
-            }
-        });
-        return duplicates;
-    }
-
-    // Convert JSON to CSV
-    function convertJsonToCsv(files) {
-        const file = files[0];
-        const reader = new FileReader();
-        reader.onload = function (e) {
-            const json = JSON.parse(e.target.result);
-            const csv = jsonToCsv(json);
-            createFileDownload(csv, "converted.csv");
-        };
-        reader.readAsText(file);
-    }
-
-    function jsonToCsv(json) {
-        const keys = Object.keys(json[0]);
-        const csvRows = [];
-        csvRows.push(keys.join(','));
-
-        json.forEach((item) => {
-            const values = keys.map((key) => item[key]);
-            csvRows.push(values.join(','));
-        });
-        return csvRows.join('\n');
-    }
-
-    // Helper function to create a downloadable file
-    function createFileDownload(content, filename) {
-        const blob = new Blob([content], { type: 'text/plain' });
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.download = filename;
-        link.click();
-    }
-});
+  const reader = new FileReader();
+  reader.onload = function (e) {
+    const json = JSON.parse(e.target.result);
+    const csv = Papa.unparse(json);
+    const blob = new Blob([csv], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "output.csv";
+    a.click();
+  };
+  reader.readAsText(file);
+}
