@@ -7,42 +7,43 @@
 
 body {
   font-family: Arial, sans-serif;
-  background-color: #121212; /* Dark background for dark mode */
-  color: #e0e0e0; /* Light gray text color (similar to ChatGPT) */
+  background-color: #121212;
+  color: #e0e0e0;
   display: flex;
   justify-content: center;
-  align-items: flex-start; /* Align items at the top */
+  align-items: flex-start;
   height: 100vh;
   flex-direction: column;
-  padding-top: 40px; /* Add some space from the top */
+  padding-top: 40px;
 }
 
 /* Title Styles */
 h1.tagline {
-  font-size: 3rem;
-  color: #f5f5f5; /* Light gray color for the title */
+  font-size: 2rem;
+  color: #f5f5f5;
   margin-bottom: 40px;
   text-align: center;
   font-weight: 600;
+  padding-top: 20px;
 }
 
 /* Container Styles */
 .container {
   display: flex;
-  flex-direction: column; /* Stack the cards vertically */
-  align-items: center; /* Center the cards horizontally */
-  gap: 30px; /* Add some space between cards */
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
   width: 100%;
-  max-width: 900px; /* Limit the width for better readability */
+  max-width: 900px;
 }
 
 /* Card Styles */
 .card {
-  background-color: #333; /* Dark background for cards */
+  background-color: #333;
   border-radius: 10px;
   padding: 30px;
   width: 100%;
-  max-width: 600px; /* Limit card width */
+  max-width: 600px;
   text-align: center;
   transition: background-color 0.3s;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
@@ -50,14 +51,14 @@ h1.tagline {
 
 /* Card Heading Styles */
 .card h2 {
-  color: #b0bec5; /* Slightly darker gray for headings */
+  color: #b0bec5;
   font-size: 1.5rem;
   margin-bottom: 15px;
 }
 
 /* Card Description Styles */
 .card p {
-  color: #e0e0e0; /* Lighter gray for body text */
+  color: #e0e0e0;
   margin-bottom: 25px;
   font-size: 1rem;
 }
@@ -73,17 +74,17 @@ h1.tagline {
   border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.3s, border-color 0.3s;
-  color: #b0bec5; /* Text inside the file drop area is in a soft gray */
+  color: #b0bec5;
 }
 
 .file-upload:hover {
-  background-color: #444; /* Darker hover effect */
-  border-color: #b0bec5; /* Subtle change in border color on hover */
+  background-color: #444;
+  border-color: #b0bec5;
 }
 
 /* Accepted File Upload Background */
 .file-upload.accepted {
-  background-color: #4caf50; /* Green color when files are accepted */
+  background-color: #4caf50;
 }
 
 /* Accessibility & Mobile Styles */
@@ -93,6 +94,6 @@ h1.tagline {
   }
 
   .card {
-    width: 100%; /* Take up the full width on small screens */
+    width: 100%;
   }
 }
